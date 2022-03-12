@@ -41,21 +41,21 @@ class Spot:
 
 	def make_mountain(self):
 		self.color = MOUNTAIN
-		self.cost = 50
+		self.costo = 50
 
 	def is_water(self):
 		return self.color == WATER
 
 	def make_water(self):
 		self.color = WATER
-		self.cost = 100
+		self.costo = 100
 
 	def is_forest(self):
 		return self.color == GRASSLAND
 
 	def make_grassland(self):
 		self.color = GRASSLAND
-		self.cost = 5
+		self.costo = 5
 
 	def get_pos(self):
 		return self.row, self.col
