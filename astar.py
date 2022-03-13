@@ -252,15 +252,15 @@ def dibujarMenu():
 		ventanaMenu.blit(fondo_menu, (0, 0))
 		posicionMouse = pygame.mouse.get_pos()
 		textoMenu = get_font(100).render("MENU", True, BLANCO)
-		rectangulo = textoMenu.get_rect(center=(300, 100))
+		contenedorTextoMenu = textoMenu.get_rect(center=(300, 100))
 		botonJugar = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 230), 
-                            text_input="Jugar", font=get_font(70), base_color="#d7fcd4", hovering_color="White")
+                            text_input="Jugar", font=get_font(30), base_color=BLANCO, hovering_color="White")
 		botonControles= Button(image=pygame.image.load("rectangulo.png"), pos=(300, 380), 
-                            text_input="Controles", font=get_font(40), base_color="#d7fcd4", hovering_color="White")
+                            text_input="Controles", font=get_font(30), base_color=BLANCO, hovering_color="White")
 		botonSalir = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 530), 
-                            text_input="Salir", font=get_font(70), base_color="#d7fcd4", hovering_color="White")
+                            text_input="Salir", font=get_font(30), base_color=BLANCO, hovering_color="White")
 
-		ventanaMenu.blit(textoMenu, rectangulo)
+		ventanaMenu.blit(textoMenu, contenedorTextoMenu)
 		for button in [botonJugar, botonControles, botonSalir]:
 			button.changeColor(posicionMouse)
 			button.update(ventanaMenu)
@@ -273,11 +273,31 @@ def dibujarMenu():
 				if botonJugar.checkForInput(posicionMouse):
 					main(ventana, anchoYAlto)
 				if botonControles.checkForInput(posicionMouse):
-					dibujar()
+					controles()
 				if botonSalir.checkForInput(posicionMouse):
 					pygame.quit()
 					sys.exit()
 		pygame.display.update()
+
+def controles():
+	while True:
+		mousePosicion = pygame.mouse.get_pos()  
+		ventanaMenu.fill(NEGRO)
+		texto = get_font(40).render("Controles", True, BLANCO)
+		contenedorTexto = texto.get_rect(center=(300, 50))
+		ventanaMenu.blit(texto, contenedorTexto)
+		regresarBtn = Button(image=None, pos=(300, 550), 
+						text_input="Atras", font=get_font(40), base_color=BLANCO, hovering_color="Green")
+		regresarBtn.changeColor(mousePosicion)
+		regresarBtn.update(ventanaMenu)
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if regresarBtn.checkForInput(mousePosicion):
+					dibujarMenu()
+				pygame.display.update()
 
 def main(ventana, anchoYAlto):
 	filas = 10
