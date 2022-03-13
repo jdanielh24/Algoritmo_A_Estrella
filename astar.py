@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 from queue import PriorityQueue
 
 anchoYAlto = 600
@@ -20,6 +21,8 @@ MONTANIA = (139,69,19)
 AGUA = (93, 173, 226)
 BOSQUE = (25, 111, 61 )
 PASTO = (125, 206, 160)
+
+FILAS = 25
 
 class Nodo:
 	def __init__(self, fila, columna, anchoYAlto, total_filas):
@@ -179,16 +182,18 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 def crearCuadricula(filas, anchoYAlto):
 	cuadricula = []
 	anchoCasilla = anchoYAlto // filas
-	mapa = crear_mapa()
+	mapa = crear_mapa(filas)
 	for i in range(filas):
 		cuadricula.append([])
 		for j in range(filas):
 			nodo = Nodo(i, j, anchoCasilla, filas)
+			if (mapa[i][j] == 'P'):
+				nodo.crearPasto()
+			if (mapa[i][j] == 'B'):
+				nodo.crearBosque()
 			if (mapa[i][j] == 'M'):
 				nodo.crearMontania()
-			if (mapa[i][j] == 'G'):
-				nodo.esPasto()
-			if (mapa[i][j] == 'W'):
+			if (mapa[i][j] == 'A'):
 				nodo.crearAgua()
 			cuadricula[i].append(nodo)
 
@@ -223,6 +228,42 @@ def obtenerPosicionDeClick(posicion, filas, anchoYAlto):
 
 	return fila, columna
 
+def anadir_suelo_contiguo(mapa,  i, j, prob, tipo_suelo):
+    if prob < 0:
+        return
+    
+    if(random.random() < prob):
+        mapa [i][j] == tipo_suelo
+    
+    if (i-1 >= 0 and j-1 >= 0) and (i+1 < len(mapa) and j+1 < len(mapa)):
+        anadir_suelo_contiguo(mapa,  i-1,   j,      prob-0.1, tipo_suelo)
+        anadir_suelo_contiguo(mapa,  i,     j-1,    prob-0.1, tipo_suelo)
+        anadir_suelo_contiguo(mapa,  i,     j+1,    prob-0.1, tipo_suelo)
+        anadir_suelo_contiguo(mapa,  i+1,   j,      prob-0.1, tipo_suelo)
+    
+    return
+
+def anadirSuelos(mapa):
+    SUELOS = ['B', 'M', 'A']
+    PESOS = [0.6, 0.3, 0.1 ]
+    
+    for i in range(len(mapa)):
+        for j in range(len(mapa[i])):
+            if (random.random() > 0.5):
+                suelo = random.choices(population=SUELOS, weights=PESOS, k=1)[0]
+                mapa[i][j] = suelo
+                anadir_suelo_contiguo(mapa, i, j, 0.5, suelo)
+
+def crear_mapa(ancho):
+	mapa = []
+	for i in range(ancho):
+		mapa.append([])
+		for j in range(ancho):
+			mapa[i].append('V')
+	anadirSuelos(mapa)
+	return mapa
+
+'''
 def crear_mapa():
 	mapa = [ ['G','M','M','M','M','M','M','M','M','M'],
 			 ['G','G','G','M','M','M','G','G','G','G'],
@@ -235,10 +276,10 @@ def crear_mapa():
 			 ['M','G','G','G','G','G','G','G','M','M'],
 			 ['M','G','G','G','G','M','M','M','M','M'],
 			]
-	return mapa
+	return mapa'''
 
 def main(ventana, anchoYAlto):
-	filas = 10
+	filas = 25
 	cuadricula = crearCuadricula(filas, anchoYAlto)
 
 	inicio = None
