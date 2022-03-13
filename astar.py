@@ -11,7 +11,7 @@ pygame.init()
 
 anchoYAlto = 800
 ventanaMenu = pygame.display.set_mode((anchoYAlto, anchoYAlto))
-fondo_menu = pygame.image.load("fondoMenu.png")
+fondo_menu = pygame.image.load("fondoMenu.jpg")
 ventana = pygame.display.set_mode((anchoYAlto, anchoYAlto))
 pygame.display.set_caption("Proyecto IA algoritmo estrella")
 
@@ -298,12 +298,12 @@ def dibujarMenu():
 		ventanaMenu.blit(fondo_menu, (0, 0))
 		posicionMouse = pygame.mouse.get_pos()
 		textoMenu = get_font(100).render("MENU", True, BLANCO)
-		contenedorTextoMenu = textoMenu.get_rect(center=(300, 100))
-		botonJugar = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 230), 
+		contenedorTextoMenu = textoMenu.get_rect(center=(400, 200))
+		botonJugar = Button(image=pygame.image.load("rectangulo.png"), pos=(400, 330), 
                             text_input="Jugar", font=get_font(30), base_color=BLANCO, hovering_color=VERDE)
-		botonControles= Button(image=pygame.image.load("rectangulo.png"), pos=(300, 380), 
+		botonControles= Button(image=pygame.image.load("rectangulo.png"), pos=(400, 480), 
                             text_input="Controles", font=get_font(30), base_color=BLANCO, hovering_color=VERDE)
-		botonSalir = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 530), 
+		botonSalir = Button(image=pygame.image.load("rectangulo.png"), pos=(400, 630), 
                             text_input="Salir", font=get_font(30), base_color=BLANCO, hovering_color=VERDE)
 
 		ventanaMenu.blit(textoMenu, contenedorTextoMenu)
@@ -327,18 +327,18 @@ def dibujarMenu():
 
 def controles():
 	while True:
+		ventanaMenu.blit(fondo_menu, (0, 0))
 		mousePosicion = pygame.mouse.get_pos()  
-		ventanaMenu.fill(NEGRO)
 		texto = get_font(40).render("Controles", True, BLANCO)
 		textoControles = get_font(30).render("C: Reiniciar",True,BLANCO)
 		textoControles2 = get_font(25).render("Espacio: Buscar camino",True,BLANCO)
-		contenedorTexto = texto.get_rect(center=(300, 150))
-		contenedorTextoControles = textoControles.get_rect(center=(300,250))
-		contenedorTextoControles2= textoControles2.get_rect(center=(300,350))
+		contenedorTexto = texto.get_rect(center=(400, 250))
+		contenedorTextoControles = textoControles.get_rect(center=(400,350))
+		contenedorTextoControles2= textoControles2.get_rect(center=(400,450))
 		ventanaMenu.blit(texto, contenedorTexto)
 		ventanaMenu.blit(textoControles,contenedorTextoControles)
 		ventanaMenu.blit(textoControles2,contenedorTextoControles2)
-		regresarBtn = Button(image=None, pos=(300, 450), 
+		regresarBtn = Button(image=None, pos=(400, 550), 
 						text_input="Atras", font=get_font(40), base_color=BLANCO, hovering_color=VERDE)
 		regresarBtn.changeColor(mousePosicion)
 		regresarBtn.update(ventanaMenu)
