@@ -1,9 +1,17 @@
-import pygame
+from multiprocessing.connection import wait
+from turtle import delay
+import pygame, sys
 import math
 import random
+from boton import Button
 from queue import PriorityQueue
 
-anchoYAlto = 600
+
+pygame.init()
+
+anchoYAlto = 800
+ventanaMenu = pygame.display.set_mode((anchoYAlto, anchoYAlto))
+fondo_menu = pygame.image.load("fondoMenu.png")
 ventana = pygame.display.set_mode((anchoYAlto, anchoYAlto))
 pygame.display.set_caption("Proyecto IA algoritmo estrella")
 
@@ -22,7 +30,9 @@ AGUA = (93, 173, 226)
 BOSQUE = (25, 111, 61 )
 PASTO = (125, 206, 160)
 
-FILAS = 25
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("font.ttf", size)
+
 
 class Nodo:
 	def __init__(self, fila, columna, anchoYAlto, total_filas):
@@ -52,13 +62,20 @@ class Nodo:
 	def crearAgua(self):
 		self.color = AGUA
 		self.costo = 100
-
+	
 	def esBosque(self):
-		return self.color == PASTO
+		return self.color == BOSQUE
+
+	def crearBosque(self):
+		self.color = BOSQUE
+		self.costo = 10
 
 	def esPasto(self):
+		return self.color == PASTO
+
+	def crearPasto(self):
 		self.color = PASTO
-		self.costo = 5
+		self.costo = 1
 
 	def getPosicion(self):
 		return self.fila, self.columna
@@ -160,23 +177,21 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 
 		for vecino in actual.vecinos:
 			g_temporal = g[actual] + vecino.getCosto()
-
 			if g_temporal < g[vecino]:
 				provieneDe[vecino] = actual
 				g[vecino] = g_temporal
 				f[vecino] = g_temporal + h(vecino.getPosicion(), fin.getPosicion())
 				if vecino not in listaAbiertaHash:
-					contador += vecino.getCosto()
+					contador += 1
 					listaAbierta.put((f[vecino], contador, vecino))
 					listaAbiertaHash.add(vecino)
 					vecino.crearAbierto()
-
 		dibujar()
 
 		if actual != inicio:
 			actual.crearCerrado()
-
-	return False
+		
+	return False 
 
 
 def crearCuadricula(filas, anchoYAlto):
@@ -218,7 +233,6 @@ def dibujar(ventana, cuadricula, filas, anchoYAlto):
 	dibujarCuadricula(ventana, filas, anchoYAlto)
 	pygame.display.update()
 
-
 def obtenerPosicionDeClick(posicion, filas, anchoYAlto):
 	anchoCasilla = anchoYAlto // filas
 	y, x = posicion
@@ -233,7 +247,7 @@ def anadir_suelo_contiguo(mapa,  i, j, prob, tipo_suelo):
         return
     
     if(random.random() < prob):
-        mapa [i][j] == tipo_suelo
+        mapa [i][j] = tipo_suelo
     
     if (i-1 >= 0 and j-1 >= 0) and (i+1 < len(mapa) and j+1 < len(mapa)):
         anadir_suelo_contiguo(mapa,  i-1,   j,      prob-0.1, tipo_suelo)
@@ -245,41 +259,74 @@ def anadir_suelo_contiguo(mapa,  i, j, prob, tipo_suelo):
 
 def anadirSuelos(mapa):
     SUELOS = ['B', 'M', 'A']
-    PESOS = [0.6, 0.3, 0.1 ]
+    PESOS = [0.5, 0.3, 0.2 ]
     
     for i in range(len(mapa)):
         for j in range(len(mapa[i])):
-            if (random.random() > 0.5):
+            if (random.random() > 0.97):
                 suelo = random.choices(population=SUELOS, weights=PESOS, k=1)[0]
                 mapa[i][j] = suelo
                 anadir_suelo_contiguo(mapa, i, j, 0.5, suelo)
+
 
 def crear_mapa(ancho):
 	mapa = []
 	for i in range(ancho):
 		mapa.append([])
 		for j in range(ancho):
-			mapa[i].append('V')
+			mapa[i].append('P')
 	anadirSuelos(mapa)
 	return mapa
 
 '''
-def crear_mapa():
-	mapa = [ ['G','M','M','M','M','M','M','M','M','M'],
-			 ['G','G','G','M','M','M','G','G','G','G'],
-			 ['G','G','G','W','M','M','G','W','W','G'],
-			 ['G','G','G','W','W','M','G','W','W','G'],
-			 ['G','G','G','W','W','M','G','M','W','G'],
-			 ['G','G','M','M','M','M','G','G','W','G'],
-			 ['M','M','M','M','M','M','G','G','G','G'],
-			 ['M','G','G','G','G','G','G','G','G','G'],
-			 ['M','G','G','G','G','G','G','G','M','M'],
-			 ['M','G','G','G','G','M','M','M','M','M'],
+def crear_mapa(X):
+	mapa = [ ['P','M','M','M','M','M','M','M','M','M'],
+			 ['P','P','P','M','M','M','P','P','P','P'],
+			 ['P','P','P','A','M','M','P','A','A','P'],
+			 ['P','P','P','A','A','M','P','A','A','P'],
+			 ['P','P','P','A','A','M','P','M','A','P'],
+			 ['P','P','M','M','M','M','P','P','A','P'],
+			 ['M','M','M','M','M','M','P','P','P','P'],
+			 ['M','P','P','P','P','P','P','P','P','P'],
+			 ['M','P','P','P','P','P','P','P','M','M'],
+			 ['M','P','P','P','P','M','M','M','M','M'],
 			]
-	return mapa'''
+	return mapa
+	'''
+def dibujarMenu():
+	while True:
+		ventanaMenu.blit(fondo_menu, (0, 0))
+		posicionMouse = pygame.mouse.get_pos()
+		textoMenu = get_font(100).render("MENU", True, BLANCO)
+		rectangulo = textoMenu.get_rect(center=(300, 100))
+		botonJugar = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 230), 
+                            text_input="Jugar", font=get_font(70), base_color="#d7fcd4", hovering_color="White")
+		botonControles= Button(image=pygame.image.load("rectangulo.png"), pos=(300, 380), 
+                            text_input="Controles", font=get_font(40), base_color="#d7fcd4", hovering_color="White")
+		botonSalir = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 530), 
+                            text_input="Salir", font=get_font(70), base_color="#d7fcd4", hovering_color="White")
+
+		ventanaMenu.blit(textoMenu, rectangulo)
+		for button in [botonJugar, botonControles, botonSalir]:
+			button.changeColor(posicionMouse)
+			button.update(ventanaMenu)
+			
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if botonJugar.checkForInput(posicionMouse):
+					main(ventana, anchoYAlto)
+				if botonControles.checkForInput(posicionMouse):
+					dibujar()
+				if botonSalir.checkForInput(posicionMouse):
+					pygame.quit()
+					sys.exit()
+		pygame.display.update()
 
 def main(ventana, anchoYAlto):
-	filas = 25
+	filas = 50
 	cuadricula = crearCuadricula(filas, anchoYAlto)
 
 	inicio = None
@@ -332,4 +379,6 @@ def main(ventana, anchoYAlto):
 
 	pygame.quit()
 
-main(ventana, anchoYAlto)
+
+dibujarMenu()
+#main(ventana, anchoYAlto)

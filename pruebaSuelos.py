@@ -36,6 +36,16 @@ def anadirSuelos(mapa):
                 mapa[i][j] = suelo
                 anadir_suelo_contiguo(mapa, i, j, 0.5, suelo)
 
+    for fila in mapa:
+        for i in range(len(fila)):
+            # print(random.random())
+            if (random.random() > 0.8):
+                fila[i] = random.choices(population=SUELOS, weights=PESOS, k=1)[0]
+            #print(elem) 
+
+    #if (random.random() > 0.8):
+     #   nuevo)
+    
     print(random.choices(population=SUELOS, weights=PESOS, k=10))
 
 def imprimirMapa(mapa):
