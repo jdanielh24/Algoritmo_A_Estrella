@@ -61,11 +61,18 @@ class Nodo:
 	def crearAgua(self):
 		self.color = AGUA
 		self.costo = 100
-
+	
 	def esBosque(self):
-		return self.color == PASTO
+		return self.color == BOSQUE
+
+	def crearBosque(self):
+		self.color = BOSQUE
+		self.costo = 10
 
 	def esPasto(self):
+		return self.color == PASTO
+
+	def crearPasto(self):
 		self.color = PASTO
 		self.costo = 5
 
@@ -199,7 +206,7 @@ def crearCuadricula(filas, anchoYAlto):
 			if (mapa[i][j] == 'M'):
 				nodo.crearMontania()
 			if (mapa[i][j] == 'G'):
-				nodo.esPasto()
+				nodo.crearPasto()
 			if (mapa[i][j] == 'W'):
 				nodo.crearAgua()
 			cuadricula[i].append(nodo)
