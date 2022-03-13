@@ -2,116 +2,116 @@ import pygame
 import math
 from queue import PriorityQueue
 
-WIDTH = 800
-WIN = pygame.display.set_mode((WIDTH, WIDTH))
-pygame.display.set_caption("A* Path Finding Algorithm")
+anchoYAlto = 600
+ventana = pygame.display.set_mode((anchoYAlto, anchoYAlto))
+pygame.display.set_caption("Proyecto IA algoritmo estrella")
 
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 255, 0)
-YELLOW = (255, 255, 0)
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-PURPLE = (128, 0, 128)
-ORANGE = (255, 165 ,0)
-GREY = (128, 128, 128)
-TURQUOISE = (64, 224, 208)
-MOUNTAIN = (139,69,19)
-WATER = (93, 173, 226)
-FOREST = (25, 111, 61 )
-GRASSLAND = (125, 206, 160)
+ROJO = (255, 0, 0)
+VERDE = (0, 255, 0)
+AZUL = (0, 255, 0)
+AMARILLO = (255, 255, 0)
+BLANCO = (255, 255, 255)
+NEGRO = (0, 0, 0)
+MORADO = (128, 0, 128)
+NARANJA = (255, 165 ,0)
+GRIS = (128, 128, 128)
+TURQUESA = (64, 224, 208)
+MONTANIA = (139,69,19)
+AGUA = (93, 173, 226)
+BOSQUE = (25, 111, 61 )
+PASTO = (125, 206, 160)
 
-class Spot:
-	def __init__(self, row, col, width, total_rows):
-		self.row = row
-		self.col = col
-		self.x = row * width
-		self.y = col * width
-		self.color = WHITE
-		self.neighbors = []
-		self.width = width
-		self.total_rows = total_rows
+class Nodo:
+	def __init__(self, fila, columna, anchoYAlto, total_filas):
+		self.fila = fila
+		self.columna = columna
+		self.x = fila * anchoYAlto
+		self.y = columna * anchoYAlto
+		self.color = BLANCO
+		self.vecinos = []
+		self.anchoYAlto = anchoYAlto
+		self.total_filas = total_filas
 		self.costo = 1
 	
 	def getCosto(self):
 		return self.costo
 
-	def is_mountain(self):
-		return self.color == MOUNTAIN
+	def esMontania(self):
+		return self.color == MONTANIA
 
-	def make_mountain(self):
-		self.color = MOUNTAIN
+	def crearMontania(self):
+		self.color = MONTANIA
 		self.costo = 50
 
-	def is_water(self):
-		return self.color == WATER
+	def esAgua(self):
+		return self.color == AGUA
 
-	def make_water(self):
-		self.color = WATER
+	def crearAgua(self):
+		self.color = AGUA
 		self.costo = 100
 
-	def is_forest(self):
-		return self.color == GRASSLAND
+	def esBosque(self):
+		return self.color == PASTO
 
-	def make_grassland(self):
-		self.color = GRASSLAND
+	def esPasto(self):
+		self.color = PASTO
 		self.costo = 5
 
-	def get_pos(self):
-		return self.row, self.col
+	def getPosicion(self):
+		return self.fila, self.columna
 
-	def is_closed(self):
-		return self.color == RED
+	def estaCerrado(self):
+		return self.color == ROJO
 
-	def is_open(self):
-		return self.color == GREEN
+	def estaAbierto(self):
+		return self.color == VERDE
 
-	def is_barrier(self):
-		return self.color == BLACK
+	def esBarrera(self):
+		return self.color == NEGRO
 
-	def is_start(self):
-		return self.color == ORANGE
+	def esInicio(self):
+		return self.color == NARANJA
 
-	def is_end(self):
-		return self.color == TURQUOISE
+	def esFinal(self):
+		return self.color == TURQUESA
 
-	def reset(self):
-		self.color = WHITE
+	def reiniciar(self):
+		self.color = BLANCO
 
-	def make_start(self):
-		self.color = ORANGE
+	def crearInicio(self):
+		self.color = NARANJA
 
-	def make_closed(self):
-		self.color = RED
+	def crearCerrado(self):
+		self.color = ROJO
 
-	def make_open(self):
-		self.color = GREEN
+	def crearAbierto(self):
+		self.color = VERDE
 
-	def make_barrier(self):
-		self.color = BLACK
+	def crearBarrera(self):
+		self.color = NEGRO
 
-	def make_end(self):
-		self.color = TURQUOISE
+	def crearFinal(self):
+		self.color = TURQUESA
 
-	def make_path(self):
-		self.color = PURPLE
+	def crearCamino(self):
+		self.color = MORADO
 
-	def draw(self, win):
-		pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
+	def dibujar(self, ventana):
+		pygame.draw.rect(ventana, self.color, (self.x, self.y, self.anchoYAlto, self.anchoYAlto))
 
-	def update_neighbors(self, grid):
-		self.neighbors = []
-		if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # DOWN
-			self.neighbors.append(grid[self.row + 1][self.col])
+	def actualizarVecinos(self, cuadricula):
+		self.vecinos = []
+		if self.fila < self.total_filas - 1 and not cuadricula[self.fila + 1][self.columna].esBarrera(): # DOWN
+			self.vecinos.append(cuadricula[self.fila + 1][self.columna])
 
-		if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # UP
-			self.neighbors.append(grid[self.row - 1][self.col])
+		if self.fila > 0 and not cuadricula[self.fila - 1][self.columna].esBarrera(): # UP
+			self.vecinos.append(cuadricula[self.fila - 1][self.columna])
 
-		if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # RIGHT
-			self.neighbors.append(grid[self.row][self.col + 1])
+		if self.columna < self.total_filas - 1 and not cuadricula[self.fila][self.columna + 1].esBarrera(): # RIGHT
+			self.vecinos.append(cuadricula[self.fila][self.columna + 1])
 
-		if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # LEFT
-			self.neighbors.append(grid[self.row][self.col - 1])
+		if self.columna > 0 and not cuadricula[self.fila][self.columna - 1].esBarrera(): # LEFT
+			self.vecinos.append(cuadricula[self.fila][self.columna - 1])
 
 	def __lt__(self, other):
 		return False
@@ -123,105 +123,105 @@ def h(p1, p2):
 	return abs(x1 - x2) + abs(y1 - y2)
 
 
-def reconstruct_path(came_from, current, draw):
-	while current in came_from:
-		current = came_from[current]
-		current.make_path()
-		draw()
+def reconstruirCamino(provieneDe, actual, dibujar):
+	while actual in provieneDe:
+		actual = provieneDe[actual]
+		actual.crearCamino()
+		dibujar()
 
 
-def algorithm(draw, grid, start, end):
-	count = 0
-	open_set = PriorityQueue()
-	open_set.put((0, count, start))
-	came_from = {}
-	g_score = {spot: float("inf") for row in grid for spot in row}
-	g_score[start] = 0
-	f_score = {spot: float("inf") for row in grid for spot in row}
-	f_score[start] = h(start.get_pos(), end.get_pos())
+def algoritmo(dibujar, cuadricula, inicio, fin):
+	contador = 0
+	listaAbierta = PriorityQueue()
+	listaAbierta.put((0, contador, inicio))
+	provieneDe = {}
+	g = {nodo: float("inf") for fila in cuadricula for nodo in fila}
+	g[inicio] = 0
+	f = {nodo: float("inf") for fila in cuadricula for nodo in fila}
+	f[inicio] = h(inicio.getPosicion(), fin.getPosicion())
 
-	open_set_hash = {start}
+	listaAbiertaHash = {inicio}
 
-	while not open_set.empty():
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
+	while not listaAbierta.empty():
+		for evento in pygame.event.get():
+			if evento.type == pygame.QUIT:
 				pygame.quit()
 
-		current = open_set.get()[2]
-		open_set_hash.remove(current)
+		actual = listaAbierta.get()[2]
+		listaAbiertaHash.remove(actual)
 
-		if current == end:
-			reconstruct_path(came_from, end, draw)
-			end.make_end()
+		if actual == fin:
+			reconstruirCamino(provieneDe, fin, dibujar)
+			fin.crearFinal()
 			return True
 
-		for neighbor in current.neighbors:
-			temp_g_score = g_score[current] + neighbor.getCosto()
+		for vecino in actual.vecinos:
+			g_temporal = g[actual] + vecino.getCosto()
 
-			if temp_g_score < g_score[neighbor]:
-				came_from[neighbor] = current
-				g_score[neighbor] = temp_g_score
-				f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
-				if neighbor not in open_set_hash:
-					count += 1
-					open_set.put((f_score[neighbor], count, neighbor))
-					open_set_hash.add(neighbor)
-					neighbor.make_open()
+			if g_temporal < g[vecino]:
+				provieneDe[vecino] = actual
+				g[vecino] = g_temporal
+				f[vecino] = g_temporal + h(vecino.getPosicion(), fin.getPosicion())
+				if vecino not in listaAbiertaHash:
+					contador += vecino.getCosto()
+					listaAbierta.put((f[vecino], contador, vecino))
+					listaAbiertaHash.add(vecino)
+					vecino.crearAbierto()
 
-		draw()
+		dibujar()
 
-		if current != start:
-			current.make_closed()
+		if actual != inicio:
+			actual.crearCerrado()
 
 	return False
 
 
-def make_grid(rows, width):
-	grid = []
-	gap = width // rows
+def crearCuadricula(filas, anchoYAlto):
+	cuadricula = []
+	anchoCasilla = anchoYAlto // filas
 	mapa = crear_mapa()
-	for i in range(rows):
-		grid.append([])
-		for j in range(rows):
-			spot = Spot(i, j, gap, rows)
+	for i in range(filas):
+		cuadricula.append([])
+		for j in range(filas):
+			nodo = Nodo(i, j, anchoCasilla, filas)
 			if (mapa[i][j] == 'M'):
-				spot.make_mountain()
+				nodo.crearMontania()
 			if (mapa[i][j] == 'G'):
-				spot.make_grassland()
+				nodo.esPasto()
 			if (mapa[i][j] == 'W'):
-				spot.make_water()
-			grid[i].append(spot)
+				nodo.crearAgua()
+			cuadricula[i].append(nodo)
 
-	return grid
-
-
-def draw_grid(win, rows, width):
-	gap = width // rows
-	for i in range(rows):
-		pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
-		for j in range(rows):
-			pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
+	return cuadricula
 
 
-def draw(win, grid, rows, width):
-	win.fill(WHITE)
+def dibujarCuadricula(ventana, filas, anchoYAlto):
+	anchoCasilla = anchoYAlto // filas
+	for i in range(filas):
+		pygame.draw.line(ventana, GRIS, (0, i * anchoCasilla), (anchoYAlto, i * anchoCasilla))
+		for j in range(filas):
+			pygame.draw.line(ventana, GRIS, (j * anchoCasilla, 0), (j * anchoCasilla, anchoYAlto))
 
-	for row in grid:
-		for spot in row:
-			spot.draw(win)
 
-	draw_grid(win, rows, width)
+def dibujar(ventana, cuadricula, filas, anchoYAlto):
+	ventana.fill(BLANCO)
+
+	for fila in cuadricula:
+		for nodo in fila:
+			nodo.dibujar(ventana)
+
+	dibujarCuadricula(ventana, filas, anchoYAlto)
 	pygame.display.update()
 
 
-def get_clicked_pos(pos, rows, width):
-	gap = width // rows
-	y, x = pos
+def obtenerPosicionDeClick(posicion, filas, anchoYAlto):
+	anchoCasilla = anchoYAlto // filas
+	y, x = posicion
 
-	row = y // gap
-	col = x // gap
+	fila = y // anchoCasilla
+	columna = x // anchoCasilla
 
-	return row, col
+	return fila, columna
 
 def crear_mapa():
 	mapa = [ ['G','M','M','M','M','M','M','M','M','M'],
@@ -237,58 +237,58 @@ def crear_mapa():
 			]
 	return mapa
 
-def main(win, width):
-	ROWS = 10
-	grid = make_grid(ROWS, width)
+def main(ventana, anchoYAlto):
+	filas = 10
+	cuadricula = crearCuadricula(filas, anchoYAlto)
 
-	start = None
-	end = None
+	inicio = None
+	fin = None
 
 	run = True
 	while run:
-		draw(win, grid, ROWS, width)
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
+		dibujar(ventana, cuadricula, filas, anchoYAlto)
+		for evento in pygame.event.get():
+			if evento.type == pygame.QUIT:
 				run = False
 
 			if pygame.mouse.get_pressed()[0]: # LEFT
-				pos = pygame.mouse.get_pos()
-				row, col = get_clicked_pos(pos, ROWS, width)
-				spot = grid[row][col]
-				if not start and spot != end:
-					start = spot
-					start.make_start()
+				posicion = pygame.mouse.get_pos()
+				fila, columna = obtenerPosicionDeClick(posicion, filas, anchoYAlto)
+				nodo = cuadricula[fila][columna]
+				if not inicio and nodo != fin:
+					inicio = nodo
+					inicio.crearInicio()
 
-				elif not end and spot != start:
-					end = spot
-					end.make_end()
+				elif not fin and nodo != inicio:
+					fin = nodo
+					fin.crearFinal()
 
-				elif spot != end and spot != start:
-					spot.make_barrier()
+				elif nodo != fin and nodo != inicio:
+					nodo.crearBarrera()
 
 			elif pygame.mouse.get_pressed()[2]: # RIGHT
-				pos = pygame.mouse.get_pos()
-				row, col = get_clicked_pos(pos, ROWS, width)
-				spot = grid[row][col]
-				spot.reset()
-				if spot == start:
-					start = None
-				elif spot == end:
-					end = None
+				posicion = pygame.mouse.get_pos()
+				fila, columna = obtenerPosicionDeClick(posicion, filas, anchoYAlto)
+				nodo = cuadricula[fila][columna]
+				nodo.reiniciar()
+				if nodo == inicio:
+					inicio = None
+				elif nodo == fin:
+					fin = None
 
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_SPACE and start and end:
-					for row in grid:
-						for spot in row:
-							spot.update_neighbors(grid)
+			if evento.type == pygame.KEYDOWN:
+				if evento.key == pygame.K_SPACE and inicio and fin:
+					for fila in cuadricula:
+						for nodo in fila:
+							nodo.actualizarVecinos(cuadricula)
 
-					algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)
+					algoritmo(lambda: dibujar(ventana, cuadricula, filas, anchoYAlto), cuadricula, inicio, fin)
 
-				if event.key == pygame.K_c:
-					start = None
-					end = None
-					grid = make_grid(ROWS, width)
+				if evento.key == pygame.K_c:
+					inicio = None
+					fin = None
+					cuadricula = crearCuadricula(filas, anchoYAlto)
 
 	pygame.quit()
 
-main(WIN, WIDTH)
+main(ventana, anchoYAlto)
