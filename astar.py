@@ -1,8 +1,16 @@
-import pygame
+from multiprocessing.connection import wait
+from turtle import delay
+import pygame, sys
 import math
+from boton import Button
 from queue import PriorityQueue
 
+
+pygame.init()
+
 anchoYAlto = 600
+ventanaMenu = pygame.display.set_mode((anchoYAlto, anchoYAlto))
+fondo_menu = pygame.image.load("fondoMenu.png")
 ventana = pygame.display.set_mode((anchoYAlto, anchoYAlto))
 pygame.display.set_caption("Proyecto IA algoritmo estrella")
 
@@ -20,6 +28,10 @@ MONTANIA = (139,69,19)
 AGUA = (93, 173, 226)
 BOSQUE = (25, 111, 61 )
 PASTO = (125, 206, 160)
+
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("font.ttf", size)
+
 
 class Nodo:
 	def __init__(self, fila, columna, anchoYAlto, total_filas):
@@ -213,7 +225,6 @@ def dibujar(ventana, cuadricula, filas, anchoYAlto):
 	dibujarCuadricula(ventana, filas, anchoYAlto)
 	pygame.display.update()
 
-
 def obtenerPosicionDeClick(posicion, filas, anchoYAlto):
 	anchoCasilla = anchoYAlto // filas
 	y, x = posicion
@@ -236,6 +247,37 @@ def crear_mapa():
 			 ['M','G','G','G','G','M','M','M','M','M'],
 			]
 	return mapa
+def dibujarMenu():
+	while True:
+		ventanaMenu.blit(fondo_menu, (0, 0))
+		posicionMouse = pygame.mouse.get_pos()
+		textoMenu = get_font(100).render("MENU", True, BLANCO)
+		rectangulo = textoMenu.get_rect(center=(300, 100))
+		botonJugar = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 230), 
+                            text_input="Jugar", font=get_font(70), base_color="#d7fcd4", hovering_color="White")
+		botonControles= Button(image=pygame.image.load("rectangulo.png"), pos=(300, 380), 
+                            text_input="Controles", font=get_font(40), base_color="#d7fcd4", hovering_color="White")
+		botonSalir = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 530), 
+                            text_input="Salir", font=get_font(70), base_color="#d7fcd4", hovering_color="White")
+
+		ventanaMenu.blit(textoMenu, rectangulo)
+		for button in [botonJugar, botonControles, botonSalir]:
+			button.changeColor(posicionMouse)
+			button.update(ventanaMenu)
+			
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if botonJugar.checkForInput(posicionMouse):
+					main(ventana, anchoYAlto)
+				if botonControles.checkForInput(posicionMouse):
+					dibujar()
+				if botonSalir.checkForInput(posicionMouse):
+					pygame.quit()
+					sys.exit()
+		pygame.display.update()
 
 def main(ventana, anchoYAlto):
 	filas = 10
@@ -291,4 +333,6 @@ def main(ventana, anchoYAlto):
 
 	pygame.quit()
 
-main(ventana, anchoYAlto)
+
+dibujarMenu()
+#main(ventana, anchoYAlto)
