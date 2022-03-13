@@ -298,15 +298,15 @@ def dibujarMenu():
 		ventanaMenu.blit(fondo_menu, (0, 0))
 		posicionMouse = pygame.mouse.get_pos()
 		textoMenu = get_font(100).render("MENU", True, BLANCO)
-		rectangulo = textoMenu.get_rect(center=(300, 100))
+		contenedorTextoMenu = textoMenu.get_rect(center=(300, 100))
 		botonJugar = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 230), 
-                            text_input="Jugar", font=get_font(70), base_color="#d7fcd4", hovering_color="White")
+                            text_input="Jugar", font=get_font(30), base_color=BLANCO, hovering_color=VERDE)
 		botonControles= Button(image=pygame.image.load("rectangulo.png"), pos=(300, 380), 
-                            text_input="Controles", font=get_font(40), base_color="#d7fcd4", hovering_color="White")
+                            text_input="Controles", font=get_font(30), base_color=BLANCO, hovering_color=VERDE)
 		botonSalir = Button(image=pygame.image.load("rectangulo.png"), pos=(300, 530), 
-                            text_input="Salir", font=get_font(70), base_color="#d7fcd4", hovering_color="White")
+                            text_input="Salir", font=get_font(30), base_color=BLANCO, hovering_color=VERDE)
 
-		ventanaMenu.blit(textoMenu, rectangulo)
+		ventanaMenu.blit(textoMenu, contenedorTextoMenu)
 		for button in [botonJugar, botonControles, botonSalir]:
 			button.changeColor(posicionMouse)
 			button.update(ventanaMenu)
@@ -319,10 +319,36 @@ def dibujarMenu():
 				if botonJugar.checkForInput(posicionMouse):
 					main(ventana, anchoYAlto)
 				if botonControles.checkForInput(posicionMouse):
-					dibujar()
+					controles()
 				if botonSalir.checkForInput(posicionMouse):
 					pygame.quit()
 					sys.exit()
+		pygame.display.update()
+
+def controles():
+	while True:
+		mousePosicion = pygame.mouse.get_pos()  
+		ventanaMenu.fill(NEGRO)
+		texto = get_font(40).render("Controles", True, BLANCO)
+		textoControles = get_font(30).render("C: Reiniciar",True,BLANCO)
+		textoControles2 = get_font(25).render("Espacio: Buscar camino",True,BLANCO)
+		contenedorTexto = texto.get_rect(center=(300, 150))
+		contenedorTextoControles = textoControles.get_rect(center=(300,250))
+		contenedorTextoControles2= textoControles2.get_rect(center=(300,350))
+		ventanaMenu.blit(texto, contenedorTexto)
+		ventanaMenu.blit(textoControles,contenedorTextoControles)
+		ventanaMenu.blit(textoControles2,contenedorTextoControles2)
+		regresarBtn = Button(image=None, pos=(300, 450), 
+						text_input="Atras", font=get_font(40), base_color=BLANCO, hovering_color=VERDE)
+		regresarBtn.changeColor(mousePosicion)
+		regresarBtn.update(ventanaMenu)
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if regresarBtn.checkForInput(mousePosicion):
+					dibujarMenu()
 		pygame.display.update()
 
 def main(ventana, anchoYAlto):
