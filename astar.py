@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from multiprocessing.connection import wait
-#from turtle import delay
+from turtle import delay
 import pygame, sys
 import random
 from boton import Button
@@ -429,7 +429,7 @@ def main(ventana, anchoYAlto):
 									continue
 							pygame.display.set_caption("Proyecto IA algoritmo estrella. Tablero de " + str(DIMENSIONES_POSIBLES[indice_dim]) + "x" + str(DIMENSIONES_POSIBLES[indice_dim]) + " casillas" )
 						filas =  DIMENSIONES_POSIBLES[indice_dim]
-						mapa = crear_mapa(filas)
+					mapa = crear_mapa(filas)
 					cuadricula = crearCuadricula(filas, anchoYAlto, mapa)
 
 	pygame.quit()
