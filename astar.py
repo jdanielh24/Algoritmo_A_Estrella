@@ -1,7 +1,8 @@
+from tkinter import *
+from tkinter import messagebox
 from multiprocessing.connection import wait
-from turtle import delay
+#from turtle import delay
 import pygame, sys
-import math
 import random
 from boton import Button
 from queue import PriorityQueue
@@ -9,22 +10,24 @@ from queue import PriorityQueue
 
 pygame.init()
 
+DIMENSIONES_POSIBLES = [4, 6, 8, 10, 16, 20, 25, 32, 40, 50, 80, 100]
+indice_dim = 9
 anchoYAlto = 800
 ventanaMenu = pygame.display.set_mode((anchoYAlto, anchoYAlto))
 fondo_menu = pygame.image.load("fondoMenu.jpg")
 ventana = pygame.display.set_mode((anchoYAlto, anchoYAlto))
-pygame.display.set_caption("Proyecto IA algoritmo estrella")
+pygame.display.set_caption("Proyecto IA algoritmo estrella. Tablero de " + str(DIMENSIONES_POSIBLES[indice_dim]) + "x" + str(DIMENSIONES_POSIBLES[indice_dim]) + " casillas" )
 
 ROJO = (255, 0, 0)
 VERDE = (0, 255, 0)
-AZUL = (0, 255, 0)
+AZUL = (0, 0, 255)
 AMARILLO = (255, 255, 0)
 BLANCO = (255, 255, 255)
 NEGRO = (0, 0, 0)
 MORADO = (128, 0, 128)
-NARANJA = (255, 165 ,0)
+NARANJA = (255, 135 ,0)
 GRIS = (128, 128, 128)
-TURQUESA = (64, 224, 208)
+TURQUESA = (0, 253, 255)
 MONTANIA = (139,69,19)
 AGUA = (93, 173, 226)
 BOSQUE = (25, 111, 61 )
@@ -45,6 +48,7 @@ class Nodo:
 		self.anchoYAlto = anchoYAlto
 		self.total_filas = total_filas
 		self.costo = 1
+		self.colorMarco = BLANCO
 	
 	def getCosto(self):
 		return self.costo
@@ -53,28 +57,28 @@ class Nodo:
 		return self.color == MONTANIA
 
 	def crearMontania(self):
-		self.color = MONTANIA
-		self.costo = 50
+		self.color = self.colorMarco = MONTANIA
+		self.costo = 10
 
 	def esAgua(self):
 		return self.color == AGUA
 
 	def crearAgua(self):
-		self.color = AGUA
-		self.costo = 100
+		self.color = self.colorMarco = AGUA
+		self.costo = 20
 	
 	def esBosque(self):
 		return self.color == BOSQUE
 
 	def crearBosque(self):
-		self.color = BOSQUE
-		self.costo = 10
+		self.color = self.colorMarco = BOSQUE
+		self.costo = 5
 
 	def esPasto(self):
 		return self.color == PASTO
 
 	def crearPasto(self):
-		self.color = PASTO
+		self.color = self.colorMarco = PASTO
 		self.costo = 1
 
 	def getPosicion(self):
@@ -95,29 +99,42 @@ class Nodo:
 	def esFinal(self):
 		return self.color == TURQUESA
 
+	def esCamino(self):
+		return self.color == AMARILLO
+
 	def reiniciar(self):
-		self.color = BLANCO
+		self.crearPasto()
 
 	def crearInicio(self):
-		self.color = NARANJA
+		self.color = MORADO
+		self.colorMarco = self.color
 
 	def crearCerrado(self):
-		self.color = ROJO
+		self.colorMarco = ROJO
 
 	def crearAbierto(self):
-		self.color = VERDE
+		self.colorMarco = AZUL
 
 	def crearBarrera(self):
 		self.color = NEGRO
+		self.colorMarco = self.color
 
 	def crearFinal(self):
 		self.color = TURQUESA
+		self.colorMarco = self.color
 
 	def crearCamino(self):
-		self.color = MORADO
+		self.color
+		self.colorMarco = AMARILLO
 
 	def dibujar(self, ventana):
 		pygame.draw.rect(ventana, self.color, (self.x, self.y, self.anchoYAlto, self.anchoYAlto))
+		if indice_dim < 4:
+			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.anchoYAlto, self.anchoYAlto), 7)
+		elif indice_dim < 10:
+			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.anchoYAlto, self.anchoYAlto), 3)
+		else:
+			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.anchoYAlto, self.anchoYAlto), 2)
 
 	def actualizarVecinos(self, cuadricula):
 		self.vecinos = []
@@ -194,10 +211,10 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 	return False 
 
 
-def crearCuadricula(filas, anchoYAlto):
+def crearCuadricula(filas, anchoYAlto, mapa):
 	cuadricula = []
 	anchoCasilla = anchoYAlto // filas
-	mapa = crear_mapa(filas)
+
 	for i in range(filas):
 		cuadricula.append([])
 		for j in range(filas):
@@ -278,21 +295,6 @@ def crear_mapa(ancho):
 	anadirSuelos(mapa)
 	return mapa
 
-'''
-def crear_mapa(X):
-	mapa = [ ['P','M','M','M','M','M','M','M','M','M'],
-			 ['P','P','P','M','M','M','P','P','P','P'],
-			 ['P','P','P','A','M','M','P','A','A','P'],
-			 ['P','P','P','A','A','M','P','A','A','P'],
-			 ['P','P','P','A','A','M','P','M','A','P'],
-			 ['P','P','M','M','M','M','P','P','A','P'],
-			 ['M','M','M','M','M','M','P','P','P','P'],
-			 ['M','P','P','P','P','P','P','P','P','P'],
-			 ['M','P','P','P','P','P','P','P','M','M'],
-			 ['M','P','P','P','P','M','M','M','M','M'],
-			]
-	return mapa
-	'''
 def dibujarMenu():
 	while True:
 		ventanaMenu.blit(fondo_menu, (0, 0))
@@ -330,35 +332,15 @@ def controles():
 		ventanaMenu.blit(fondo_menu, (0, 0))
 		mousePosicion = pygame.mouse.get_pos()  
 		texto = get_font(40).render("Controles", True, BLANCO)
-		textoControles = get_font(30).render("C: Limpiar mapa",True,BLANCO)
-		textoControles2 = get_font(25).render("N: Nuevo mapa",True,BLANCO)
-		textoControles3 = get_font(25).render("+: Aumentar casillas",True,BLANCO)
-		textoControles4 = get_font(25).render("-: Dsiminuir casillas",True,BLANCO)
-		textoControles5 = get_font(25).render("Click derecho: colocar casillas",True,BLANCO)
-		textoControles6 = get_font(22).render("Click derecho:inicio,final,obstaculo",True,BLANCO)
-		textoControles7 = get_font(25).render("Click izquierdo: colocar pasto",True,BLANCO)
-		textoControles8 = get_font(25).render("Espacio: buscar camino",True,BLANCO)
-
-		contenedorTexto = texto.get_rect(center=(400, 70))
-		contenedorTextoControles = textoControles.get_rect(center=(400,170))
-		contenedorTextoControles2= textoControles2.get_rect(center=(340,220))
-		contenedorTextoControles3= textoControles2.get_rect(center=(340,260))
-		contenedorTextoControles4= textoControles2.get_rect(center=(340,300))
-		contenedorTextoControles5= textoControles2.get_rect(center=(170,340))
-		contenedorTextoControles6= textoControles2.get_rect(center=(164,390))
-		contenedorTextoControles7= textoControles2.get_rect(center=(170,435))
-		contenedorTextoControles8= textoControles2.get_rect(center=(340,490))
-
+		textoControles = get_font(30).render("C: Reiniciar",True,BLANCO)
+		textoControles2 = get_font(25).render("Espacio: Buscar camino",True,BLANCO)
+		contenedorTexto = texto.get_rect(center=(400, 250))
+		contenedorTextoControles = textoControles.get_rect(center=(400,350))
+		contenedorTextoControles2= textoControles2.get_rect(center=(400,450))
 		ventanaMenu.blit(texto, contenedorTexto)
 		ventanaMenu.blit(textoControles,contenedorTextoControles)
 		ventanaMenu.blit(textoControles2,contenedorTextoControles2)
-		ventanaMenu.blit(textoControles3,contenedorTextoControles3)
-		ventanaMenu.blit(textoControles4,contenedorTextoControles4)
-		ventanaMenu.blit(textoControles5,contenedorTextoControles5)
-		ventanaMenu.blit(textoControles6,contenedorTextoControles6)
-		ventanaMenu.blit(textoControles7,contenedorTextoControles7)
-		ventanaMenu.blit(textoControles8,contenedorTextoControles8)
-		regresarBtn = Button(image=None, pos=(400, 600),  
+		regresarBtn = Button(image=None, pos=(400, 550), 
 						text_input="Atras", font=get_font(40), base_color=BLANCO, hovering_color=VERDE)
 		regresarBtn.changeColor(mousePosicion)
 		regresarBtn.update(ventanaMenu)
@@ -372,8 +354,11 @@ def controles():
 		pygame.display.update()
 
 def main(ventana, anchoYAlto):
-	filas = 50
-	cuadricula = crearCuadricula(filas, anchoYAlto)
+	global indice_dim 
+	indice_dim = 9
+	filas = DIMENSIONES_POSIBLES[indice_dim]
+	mapa = crear_mapa(filas)
+	cuadricula = crearCuadricula(filas, anchoYAlto, mapa)
 
 	inicio = None
 	fin = None
@@ -415,13 +400,37 @@ def main(ventana, anchoYAlto):
 					for fila in cuadricula:
 						for nodo in fila:
 							nodo.actualizarVecinos(cuadricula)
+					
+					Tk().wm_withdraw() #to hide the main window
+					if algoritmo(lambda: dibujar(ventana, cuadricula, filas, anchoYAlto), cuadricula, inicio, fin):
+						messagebox.showinfo('Éxito','¡Camino encontrado con éxito!')
+					else:
+						messagebox.showinfo('Error','No existe solución')
+				
+				
 
-					algoritmo(lambda: dibujar(ventana, cuadricula, filas, anchoYAlto), cuadricula, inicio, fin)
-
-				if evento.key == pygame.K_c:
+				if evento.key == pygame.K_n or evento.key == pygame.K_c or evento.unicode == "-" or evento.unicode == "+":
 					inicio = None
 					fin = None
-					cuadricula = crearCuadricula(filas, anchoYAlto)
+					if evento.key == pygame.K_n or  evento.unicode == "-" or evento.unicode == "+":
+						if evento.unicode == "-" or evento.unicode == "+":
+							Tk().wm_withdraw() #to hide the main window
+							if evento.unicode == "-":
+								if indice_dim > 0:
+									indice_dim -= 1
+								else: 
+									messagebox.showinfo('Advertencia','Este es el número mínimo de casillas posibles')
+									continue
+							if evento.unicode == "+":
+								if indice_dim < len(DIMENSIONES_POSIBLES)-1:
+									indice_dim += 1
+								else:
+									messagebox.showinfo('Advertencia','Este es el número máximo de casillas posibles')
+									continue
+							pygame.display.set_caption("Proyecto IA algoritmo estrella. Tablero de " + str(DIMENSIONES_POSIBLES[indice_dim]) + "x" + str(DIMENSIONES_POSIBLES[indice_dim]) + " casillas" )
+						filas =  DIMENSIONES_POSIBLES[indice_dim]
+						mapa = crear_mapa(filas)
+					cuadricula = crearCuadricula(filas, anchoYAlto, mapa)
 
 	pygame.quit()
 
