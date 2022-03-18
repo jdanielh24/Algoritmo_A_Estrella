@@ -1,3 +1,5 @@
+from glob import escape
+from json.encoder import ESCAPE_ASCII
 from tkinter import *
 from tkinter import messagebox
 from multiprocessing.connection import wait
@@ -10,7 +12,7 @@ from queue import PriorityQueue
 
 pygame.init()
 
-DIMENSIONES_POSIBLES = [4, 6, 8, 10, 16, 20, 25, 32, 40, 50, 80, 100]
+DIMENSIONES_POSIBLES = [4, 6, 8, 10, 16, 20, 25, 32, 40, 50]
 indice_dim = 9
 ANCHO = 800
 ventanaMenu = pygame.display.set_mode((ANCHO, ANCHO))
@@ -34,9 +36,11 @@ MONTANIA = (139,69,19)
 AGUA = (93, 173, 226)
 BOSQUE = (25, 111, 61 )
 PASTO = (125, 206, 160)
+ROSA = (255, 0, 255)
+
 
 FONT_12 = pygame.font.SysFont('chalkduster.ttf', 12)
-FONT_16 = pygame.font.SysFont('chalkduster.ttf', 16)
+FONT_18 = pygame.font.SysFont('chalkduster.ttf', 18)
 FONT_32 = pygame.font.SysFont('chalkduster.ttf', 32)
 
 def get_font(size): # Returns Press-Start-2P in the desired size
@@ -49,13 +53,12 @@ class Nodo:
 		self.columna = columna
 		self.x = fila * ANCHO
 		self.y = columna * ANCHO
-		self.color = BLANCO
 		self.vecinos = []
 		self.ANCHO = ANCHO
 		self.total_filas = total_filas
 		self.costo = 1
 		self.f = "?"
-		self.colorMarco = BLANCO
+		self.final = FALSE
 	
 	def getF(self):
 		return self.f
@@ -107,19 +110,20 @@ class Nodo:
 		return self.color == NEGRO
 
 	def esInicio(self):
-		return self.color == NARANJA
+		return self.color == TURQUESA
 
 	def esFinal(self):
-		return self.color == TURQUESA
+		return self.final
 
 	def esCamino(self):
 		return self.color == AMARILLO
 
 	def reiniciar(self):
 		self.crearPasto()
+		self.final = FALSE
 
 	def crearInicio(self):
-		self.color = MORADO
+		self.color = TURQUESA
 		self.colorMarco = self.color
 
 	def crearCerrado(self):
@@ -133,28 +137,38 @@ class Nodo:
 		self.colorMarco = self.color
 
 	def crearFinal(self):
-		self.color = TURQUESA
-		self.colorMarco = self.color
+		self.colorCirculo = ROSA
+		self.final = TRUE
 
 	def crearCamino(self):
 		self.color
 		self.colorMarco = AMARILLO
 
 	def dibujar(self, ventana):
-		margen_texto = 1
+		
 		pygame.draw.rect(ventana, self.color, (self.x, self.y, self.ANCHO, self.ANCHO))
-		if indice_dim < 4:
-			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 7)
-			obj_texto = FONT_32.render(str(self.getF()), True, NEGRO)
-			margen_texto = 12
-		elif indice_dim < 10:
-			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 3)
-			obj_texto = FONT_16.render(str(self.getF()), True, NEGRO)
-			margen_texto = 3
-		else:
-			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 2)
-			obj_texto = FONT_12.render(str(self.costo), True, NEGRO)
-		ventana.blit(obj_texto, (self.x + margen_texto, self.y + margen_texto))
+		margen_texto = ancho_marco = 2
+		radio_circulo = 4
+
+		if not self.esInicio():
+			if indice_dim < 4:
+				margen_texto = ancho_marco = 7
+				radio_circulo = 15
+				obj_texto = FONT_32.render(str(self.getF()), True, NEGRO)
+			elif indice_dim < 8:
+				margen_texto = ancho_marco = 3
+				radio_circulo = 7
+				obj_texto = FONT_18.render(str(self.getF()), True, NEGRO)
+			else:
+				obj_texto = FONT_12.render(str(self.getF()), True, NEGRO)
+		
+			if self.esFinal():
+				pygame.draw.circle(ventana, self.colorCirculo, (self.x + self.ANCHO/2, self.y + self.ANCHO/2), radio_circulo)
+			
+			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), ancho_marco)
+			ventana.blit(obj_texto, (self.x + margen_texto, self.y + margen_texto))
+			
+			
 
 	def actualizarVecinos(self, cuadricula):
 		self.vecinos = []
@@ -182,12 +196,15 @@ def h(p1, p2):
 
 def reconstruirCamino(provieneDe, actual, dibujar):
 	global costo_total 
-	costo_total = 0
+	costo_total = actual.getCosto()
+	actual.crearCamino()
 	while actual in provieneDe:
 		actual = provieneDe[actual]
 		actual.crearCamino()
 		dibujar()
-		costo_total += actual.getCosto()
+
+		if not actual.esInicio():
+			costo_total += actual.getCosto()
 
 
 def algoritmo(dibujar, cuadricula, inicio, fin):
@@ -223,8 +240,10 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 				provieneDe[vecino] = actual
 				g[vecino] = g_temporal
 				f[vecino] = g_temporal + h(vecino.getPosicion(), fin.getPosicion())
+				
 				actual.setF(f[actual])
 				vecino.setF(f[vecino])
+				
 				if vecino not in listaAbiertaHash:
 					contador += 1
 					listaAbierta.put((f[vecino], contador, vecino))
