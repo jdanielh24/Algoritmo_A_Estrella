@@ -54,8 +54,15 @@ class Nodo:
 		self.ANCHO = ANCHO
 		self.total_filas = total_filas
 		self.costo = 1
+		self.f = "?"
 		self.colorMarco = BLANCO
 	
+	def getF(self):
+		return self.f
+	
+	def setF(self, f):
+		self.f = f
+
 	def getCosto(self):
 		return self.costo
 
@@ -138,11 +145,11 @@ class Nodo:
 		pygame.draw.rect(ventana, self.color, (self.x, self.y, self.ANCHO, self.ANCHO))
 		if indice_dim < 4:
 			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 7)
-			obj_texto = FONT_32.render(str(self.costo), True, NEGRO)
+			obj_texto = FONT_32.render(str(self.getF()), True, NEGRO)
 			margen_texto = 12
 		elif indice_dim < 10:
 			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 3)
-			obj_texto = FONT_16.render(str(self.costo), True, NEGRO)
+			obj_texto = FONT_16.render(str(self.getF()), True, NEGRO)
 			margen_texto = 3
 		else:
 			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 2)
@@ -212,14 +219,19 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 		for vecino in actual.vecinos:
 			g_temporal = g[actual] + vecino.getCosto()
 			if g_temporal < g[vecino]:
+				
 				provieneDe[vecino] = actual
 				g[vecino] = g_temporal
 				f[vecino] = g_temporal + h(vecino.getPosicion(), fin.getPosicion())
+				actual.setF(f[actual])
+				vecino.setF(f[vecino])
 				if vecino not in listaAbiertaHash:
 					contador += 1
 					listaAbierta.put((f[vecino], contador, vecino))
 					listaAbiertaHash.add(vecino)
 					vecino.crearAbierto()
+					
+					
 					
 		dibujar()
 
