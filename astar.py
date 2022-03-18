@@ -1,9 +1,9 @@
-from glob import escape
-from json.encoder import ESCAPE_ASCII
+# from glob import escape
+# from json.encoder import ESCAPE_ASCII
 from tkinter import *
 from tkinter import messagebox
-from multiprocessing.connection import wait
-from turtle import delay
+# from multiprocessing.connection import wait
+# from turtle import delay
 import pygame, sys
 import random
 from boton import Button
@@ -424,7 +424,7 @@ def main(ventana, ANCHO):
 	run = True
 
 	Tk().wm_withdraw() #to hide the main window
-	messagebox.showinfo('¡Importante!', 'Presiona la tecla [h] si deseas ver los controles.')
+	messagebox.showinfo('¡Importante!', 'Asegurate de hacer click en la ventana del juego.\nPresiona la tecla [h] si deseas ver los controles.')
 
 	while run:
 		dibujar(ventana, cuadricula, filas, ANCHO)
