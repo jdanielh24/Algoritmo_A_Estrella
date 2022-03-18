@@ -12,11 +12,13 @@ pygame.init()
 
 DIMENSIONES_POSIBLES = [4, 6, 8, 10, 16, 20, 25, 32, 40, 50, 80, 100]
 indice_dim = 9
-anchoYAlto = 800
-ventanaMenu = pygame.display.set_mode((anchoYAlto, anchoYAlto))
+ANCHO = 800
+ventanaMenu = pygame.display.set_mode((ANCHO, ANCHO))
 fondo_menu = pygame.image.load("fondoMenu.jpg")
-ventana = pygame.display.set_mode((anchoYAlto, anchoYAlto))
+ventana = pygame.display.set_mode((ANCHO, ANCHO))
 pygame.display.set_caption("Proyecto IA algoritmo estrella. Tablero de " + str(DIMENSIONES_POSIBLES[indice_dim]) + "x" + str(DIMENSIONES_POSIBLES[indice_dim]) + " casillas" )
+
+costo_total = 0
 
 ROJO = (255, 0, 0)
 VERDE = (0, 255, 0)
@@ -33,19 +35,23 @@ AGUA = (93, 173, 226)
 BOSQUE = (25, 111, 61 )
 PASTO = (125, 206, 160)
 
+FONT_12 = pygame.font.SysFont('chalkduster.ttf', 12)
+FONT_16 = pygame.font.SysFont('chalkduster.ttf', 16)
+FONT_32 = pygame.font.SysFont('chalkduster.ttf', 32)
+
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("font.ttf", size)
 
 
 class Nodo:
-	def __init__(self, fila, columna, anchoYAlto, total_filas):
+	def __init__(self, fila, columna, ANCHO, total_filas):
 		self.fila = fila
 		self.columna = columna
-		self.x = fila * anchoYAlto
-		self.y = columna * anchoYAlto
+		self.x = fila * ANCHO
+		self.y = columna * ANCHO
 		self.color = BLANCO
 		self.vecinos = []
-		self.anchoYAlto = anchoYAlto
+		self.ANCHO = ANCHO
 		self.total_filas = total_filas
 		self.costo = 1
 		self.colorMarco = BLANCO
@@ -128,13 +134,20 @@ class Nodo:
 		self.colorMarco = AMARILLO
 
 	def dibujar(self, ventana):
-		pygame.draw.rect(ventana, self.color, (self.x, self.y, self.anchoYAlto, self.anchoYAlto))
+		margen_texto = 1
+		pygame.draw.rect(ventana, self.color, (self.x, self.y, self.ANCHO, self.ANCHO))
 		if indice_dim < 4:
-			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.anchoYAlto, self.anchoYAlto), 7)
+			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 7)
+			obj_texto = FONT_32.render(str(self.costo), True, NEGRO)
+			margen_texto = 12
 		elif indice_dim < 10:
-			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.anchoYAlto, self.anchoYAlto), 3)
+			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 3)
+			obj_texto = FONT_16.render(str(self.costo), True, NEGRO)
+			margen_texto = 3
 		else:
-			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.anchoYAlto, self.anchoYAlto), 2)
+			pygame.draw.rect(ventana, self.colorMarco, (self.x, self.y, self.ANCHO, self.ANCHO), 2)
+			obj_texto = FONT_12.render(str(self.costo), True, NEGRO)
+		ventana.blit(obj_texto, (self.x + margen_texto, self.y + margen_texto))
 
 	def actualizarVecinos(self, cuadricula):
 		self.vecinos = []
@@ -161,13 +174,17 @@ def h(p1, p2):
 
 
 def reconstruirCamino(provieneDe, actual, dibujar):
+	global costo_total 
+	costo_total = 0
 	while actual in provieneDe:
 		actual = provieneDe[actual]
 		actual.crearCamino()
 		dibujar()
+		costo_total += actual.getCosto()
 
 
 def algoritmo(dibujar, cuadricula, inicio, fin):
+
 	contador = 0
 	listaAbierta = PriorityQueue()
 	listaAbierta.put((0, contador, inicio))
@@ -203,6 +220,7 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 					listaAbierta.put((f[vecino], contador, vecino))
 					listaAbiertaHash.add(vecino)
 					vecino.crearAbierto()
+					
 		dibujar()
 
 		if actual != inicio:
@@ -211,9 +229,9 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 	return False 
 
 
-def crearCuadricula(filas, anchoYAlto, mapa):
+def crearCuadricula(filas, ANCHO, mapa):
 	cuadricula = []
-	anchoCasilla = anchoYAlto // filas
+	anchoCasilla = ANCHO // filas
 
 	for i in range(filas):
 		cuadricula.append([])
@@ -232,26 +250,26 @@ def crearCuadricula(filas, anchoYAlto, mapa):
 	return cuadricula
 
 
-def dibujarCuadricula(ventana, filas, anchoYAlto):
-	anchoCasilla = anchoYAlto // filas
+def dibujarCuadricula(ventana, filas, ANCHO):
+	anchoCasilla = ANCHO // filas
 	for i in range(filas):
-		pygame.draw.line(ventana, GRIS, (0, i * anchoCasilla), (anchoYAlto, i * anchoCasilla))
+		pygame.draw.line(ventana, GRIS, (0, i * anchoCasilla), (ANCHO, i * anchoCasilla))
 		for j in range(filas):
-			pygame.draw.line(ventana, GRIS, (j * anchoCasilla, 0), (j * anchoCasilla, anchoYAlto))
+			pygame.draw.line(ventana, GRIS, (j * anchoCasilla, 0), (j * anchoCasilla, ANCHO))
 
 
-def dibujar(ventana, cuadricula, filas, anchoYAlto):
-	ventana.fill(BLANCO)
+def dibujar(ventana, cuadricula, filas, ANCHO):
+	#ventana.fill(BLANCO)
 
 	for fila in cuadricula:
 		for nodo in fila:
 			nodo.dibujar(ventana)
 
-	dibujarCuadricula(ventana, filas, anchoYAlto)
+	dibujarCuadricula(ventana, filas, ANCHO)
 	pygame.display.update()
 
-def obtenerPosicionDeClick(posicion, filas, anchoYAlto):
-	anchoCasilla = anchoYAlto // filas
+def obtenerPosicionDeClick(posicion, filas, ANCHO):
+	anchoCasilla = ANCHO // filas
 	y, x = posicion
 
 	fila = y // anchoCasilla
@@ -319,7 +337,7 @@ def dibujarMenu():
 				sys.exit()
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if botonJugar.checkForInput(posicionMouse):
-					main(ventana, anchoYAlto)
+					main(ventana, ANCHO)
 				if botonControles.checkForInput(posicionMouse):
 					controles()
 				if botonSalir.checkForInput(posicionMouse):
@@ -332,34 +350,23 @@ def controles():
 		ventanaMenu.blit(fondo_menu, (0, 0))
 		mousePosicion = pygame.mouse.get_pos()  
 		texto = get_font(40).render("Controles", True, BLANCO)
-		textoControles = get_font(30).render("C: Limpiar mapa",True,BLANCO)
-		textoControles2 = get_font(25).render("N: Nuevo mapa",True,BLANCO)
-		textoControles3 = get_font(25).render("+: Aumentar casillas",True,BLANCO)
-		textoControles4 = get_font(25).render("-: Dsiminuir casillas",True,BLANCO)
-		textoControles5 = get_font(25).render("Click derecho: colocar casillas",True,BLANCO)
-		textoControles6 = get_font(22).render("Click derecho:inicio,final,obstaculo",True,BLANCO)
-		textoControles7 = get_font(25).render("Click izquierdo: colocar pasto",True,BLANCO)
-		textoControles8 = get_font(25).render("Espacio: buscar camino",True,BLANCO)
+		textoControles = []
+		leyendas_controles = ("C: Limpiar mapa actual", "N: Crear nuevo mapa", "+: aumentar tamaño del mapa", "Click der: convertir una casilla a pasto",
+					"Click izq: agregar inicio/objetivo/obstáculos", "Espacio: iniciar búsqueda del camino", "H: ayuda")
+		for leyenda in leyendas_controles:
+			textoControles.append(get_font(17).render(leyenda, True, BLANCO))
 
 		contenedorTexto = texto.get_rect(center=(400, 70))
-		contenedorTextoControles = textoControles.get_rect(center=(400,170))
-		contenedorTextoControles2= textoControles2.get_rect(center=(340,220))
-		contenedorTextoControles3= textoControles2.get_rect(center=(340,260))
-		contenedorTextoControles4= textoControles2.get_rect(center=(340,300))
-		contenedorTextoControles5= textoControles2.get_rect(center=(170,340))
-		contenedorTextoControles6= textoControles2.get_rect(center=(164,390))
-		contenedorTextoControles7= textoControles2.get_rect(center=(170,435))
-		contenedorTextoControles8= textoControles2.get_rect(center=(340,490))
+		contenedorTextoControles = []
+
+		y = 170
+		for i in range(7):
+			contenedorTextoControles.append(textoControles[i].get_rect(center=(400, y)))
+			y += 50
 
 		ventanaMenu.blit(texto, contenedorTexto)
-		ventanaMenu.blit(textoControles,contenedorTextoControles)
-		ventanaMenu.blit(textoControles2,contenedorTextoControles2)
-		ventanaMenu.blit(textoControles3,contenedorTextoControles3)
-		ventanaMenu.blit(textoControles4,contenedorTextoControles4)
-		ventanaMenu.blit(textoControles5,contenedorTextoControles5)
-		ventanaMenu.blit(textoControles6,contenedorTextoControles6)
-		ventanaMenu.blit(textoControles7,contenedorTextoControles7)
-		ventanaMenu.blit(textoControles8,contenedorTextoControles8)
+		for i in range(len(textoControles)):
+			ventanaMenu.blit(textoControles[i], contenedorTextoControles[i])
 		regresarBtn = Button(image=None, pos=(400, 600),  
 						text_input="Atras", font=get_font(40), base_color=BLANCO, hovering_color=VERDE)
 		regresarBtn.changeColor(mousePosicion)
@@ -373,26 +380,30 @@ def controles():
 					dibujarMenu()
 		pygame.display.update()
 
-def main(ventana, anchoYAlto):
+def main(ventana, ANCHO):
 	global indice_dim 
 	indice_dim = 9
 	filas = DIMENSIONES_POSIBLES[indice_dim]
 	mapa = crear_mapa(filas)
-	cuadricula = crearCuadricula(filas, anchoYAlto, mapa)
+	cuadricula = crearCuadricula(filas, ANCHO, mapa)
 
 	inicio = None
 	fin = None
 
 	run = True
+
+	Tk().wm_withdraw() #to hide the main window
+	messagebox.showinfo('¡Importante!', 'Presiona la tecla [h] si deseas ver los controles.')
+
 	while run:
-		dibujar(ventana, cuadricula, filas, anchoYAlto)
+		dibujar(ventana, cuadricula, filas, ANCHO)
 		for evento in pygame.event.get():
 			if evento.type == pygame.QUIT:
 				run = False
 
 			if pygame.mouse.get_pressed()[0]: # LEFT
 				posicion = pygame.mouse.get_pos()
-				fila, columna = obtenerPosicionDeClick(posicion, filas, anchoYAlto)
+				fila, columna = obtenerPosicionDeClick(posicion, filas, ANCHO)
 				nodo = cuadricula[fila][columna]
 				if not inicio and nodo != fin:
 					inicio = nodo
@@ -407,7 +418,7 @@ def main(ventana, anchoYAlto):
 
 			elif pygame.mouse.get_pressed()[2]: # RIGHT
 				posicion = pygame.mouse.get_pos()
-				fila, columna = obtenerPosicionDeClick(posicion, filas, anchoYAlto)
+				fila, columna = obtenerPosicionDeClick(posicion, filas, ANCHO)
 				nodo = cuadricula[fila][columna]
 				nodo.reiniciar()
 				if nodo == inicio:
@@ -422,12 +433,23 @@ def main(ventana, anchoYAlto):
 							nodo.actualizarVecinos(cuadricula)
 					
 					Tk().wm_withdraw() #to hide the main window
-					if algoritmo(lambda: dibujar(ventana, cuadricula, filas, anchoYAlto), cuadricula, inicio, fin):
-						messagebox.showinfo('Éxito','¡Camino encontrado con éxito!')
+					if algoritmo(lambda: dibujar(ventana, cuadricula, filas, ANCHO), cuadricula, inicio, fin):
+						messagebox.showinfo('Éxito','¡Camino encontrado con éxito!\nCosto total: ' + str(costo_total) )
 					else:
 						messagebox.showinfo('Error','No existe solución')
 				
-				
+				if evento.key == pygame.K_h:
+					Tk().wm_withdraw() #to hide the main window
+					messagebox.showinfo('Ayuda','[espacio] : iniciar búsqueda del camino.\n'
+												'[click izq] : agregar inicio/objetivo/obstáculos\n'
+												'[click der] : convertir una casilla a pasto.\n'
+												'[c] : limpiar mapa actual.\n'
+												'[n] : crear nuevo mapa.\n'
+												'[+] : aumentar tamaño del mapa.\n'
+												'[-] : disminuir tamaño del mapa.\n'
+												'[h] : ayuda.\n'
+										)
+												
 
 				if evento.key == pygame.K_n or evento.key == pygame.K_c or evento.unicode == "-" or evento.unicode == "+":
 					inicio = None
@@ -449,11 +471,11 @@ def main(ventana, anchoYAlto):
 									continue
 							pygame.display.set_caption("Proyecto IA algoritmo estrella. Tablero de " + str(DIMENSIONES_POSIBLES[indice_dim]) + "x" + str(DIMENSIONES_POSIBLES[indice_dim]) + " casillas" )
 						filas =  DIMENSIONES_POSIBLES[indice_dim]
-					mapa = crear_mapa(filas)
-					cuadricula = crearCuadricula(filas, anchoYAlto, mapa)
+						mapa = crear_mapa(filas)
+					cuadricula = crearCuadricula(filas, ANCHO, mapa)
 
 	pygame.quit()
 
 
 dibujarMenu()
-#main(ventana, anchoYAlto)
+#main(ventana, ANCHO)
