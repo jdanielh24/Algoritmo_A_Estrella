@@ -1,6 +1,6 @@
 import pygame
 import Colores as Color
-#pygame.init()
+pygame.init()
 
 FONT_12 = pygame.font.SysFont('chalkduster.ttf', 12)
 FONT_18 = pygame.font.SysFont('chalkduster.ttf', 18)
@@ -29,42 +29,24 @@ class Nodo:
 	def getCosto(self):
 		return self.costo
 
-	def esMontania(self):
-		return self.color == Color.MONTANIA
+	def getPosicion(self):
+		return self.fila, self.columna
 
 	def crearMontania(self):
 		self.color = self.colorMarco = Color.MONTANIA
 		self.costo = 10
 
-	def esAgua(self):
-		return self.color == Color.AGUA
-
 	def crearAgua(self):
 		self.color = self.colorMarco = Color.AGUA
 		self.costo = 20
-
-	def esBosque(self):
-		return self.color == Color.BOSQUE
 
 	def crearBosque(self):
 		self.color = self.colorMarco = Color.BOSQUE
 		self.costo = 5
 
-	def esPasto(self):
-		return self.color == Color.PASTO
-
 	def crearPasto(self):
 		self.color = self.colorMarco = Color.PASTO
 		self.costo = 1
-
-	def getPosicion(self):
-		return self.fila, self.columna
-
-	def estaCerrado(self):
-		return self.color == Color.ROJO
-
-	def estaAbierto(self):
-		return self.color == Color.VERDE
 
 	def esBarrera(self):
 		return self.color == Color.NEGRO
@@ -75,16 +57,12 @@ class Nodo:
 	def esFinal(self):
 		return self.final
 
-	def esCamino(self):
-		return self.color == Color.AMARILLO
-
 	def reiniciar(self):
 		self.crearPasto()
 		self.final = False
 
 	def crearInicio(self):
-		self.color = Color.TURQUESA
-		self.colorMarco = self.color
+		self.color = self.colorMarco = Color.TURQUESA
 
 	def crearCerrado(self):
 		self.colorMarco = Color.ROJO
@@ -93,19 +71,16 @@ class Nodo:
 		self.colorMarco = Color.AZUL
 
 	def crearBarrera(self):
-		self.color = Color.NEGRO
-		self.colorMarco = self.color
+		self.color = self.colorMarco = Color.NEGRO
 
 	def crearFinal(self):
 		self.colorCirculo = Color.ROSA
 		self.final = True
 
 	def crearCamino(self):
-		self.color
 		self.colorMarco = Color.AMARILLO
 
 	def dibujar(self, ventana):
-
 		pygame.draw.rect(ventana, self.color,
 		                 (self.x, self.y, self.ancho, self.ancho))
 		margen_texto = ancho_marco = 2
@@ -144,6 +119,3 @@ class Nodo:
 
 		if self.columna > 0 and not cuadricula[self.fila][self.columna - 1].esBarrera(): # LEFT
 			self.vecinos.append(cuadricula[self.fila][self.columna - 1])
-
-	def __lt__(self, other):
-		return False

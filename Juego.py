@@ -16,7 +16,7 @@ class Juego:
 		self.indice_dim = 9
 
 	def ejecutar(self):
-		filas = self.DIMENSIONES_POSIBLES[indice_dim]
+		filas = self.DIMENSIONES_POSIBLES[self.indice_dim]
 		
 		mapa = Mapa.crear_mapa(filas)
 		cuadricula = Cuadricula.crearCuadricula(filas, self.ancho, mapa)
@@ -30,7 +30,7 @@ class Juego:
 		messagebox.showinfo('¡Importante!', 'Asegurate de hacer click en la ventana del juego.\nPresiona la tecla [h] si deseas ver los controles.')
 		
 		while run:
-			pygame.display.set_caption("Proyecto IA algoritmo estrella. Tablero de " + str(self.DIMENSIONES_POSIBLES[indice_dim]) + "x" + str(self.DIMENSIONES_POSIBLES[indice_dim]) + " casillas" )
+			pygame.display.set_caption("Proyecto IA algoritmo estrella. Tablero de " + str(self.DIMENSIONES_POSIBLES[self.indice_dim]) + "x" + str(self.DIMENSIONES_POSIBLES[self.indice_dim]) + " casillas" )
 			Cuadricula.dibujar(self.ventana, cuadricula, filas, self.ancho)
 			for evento in pygame.event.get():
 				if evento.type == pygame.QUIT:
@@ -93,18 +93,18 @@ class Juego:
 							if evento.unicode == "-" or evento.unicode == "+":
 								Tk().wm_withdraw() #to hide the main window
 								if evento.unicode == "-":
-									if indice_dim > 0:
-										indice_dim -= 1
+									if self.indice_dim > 0:
+										self.indice_dim -= 1
 									else: 
 										messagebox.showinfo('Advertencia','Este es el número mínimo de casillas posibles')
 										continue
 								if evento.unicode == "+":
-									if indice_dim < len(self.DIMENSIONES_POSIBLES)-1:
-										indice_dim += 1
+									if self.indice_dim < len(self.DIMENSIONES_POSIBLES)-1:
+										self.indice_dim += 1
 									else:
 										messagebox.showinfo('Advertencia','Este es el número máximo de casillas posibles')
 										continue
-							filas =  self.DIMENSIONES_POSIBLES[indice_dim]
+							filas =  self.DIMENSIONES_POSIBLES[self.indice_dim]
 							mapa = Mapa.crear_mapa(filas)
 						cuadricula = Cuadricula.crearCuadricula(filas, self.ancho, mapa)
 

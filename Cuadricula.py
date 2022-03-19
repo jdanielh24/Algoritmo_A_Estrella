@@ -38,7 +38,7 @@ def dibujar(ventana, cuadricula, filas, ancho):
 	dibujarCuadricula(ventana, filas, ancho)
 	pygame.display.update()
 
-def reconstruirCamino(provieneDe, actual):
+def reconstruirCamino(provieneDe, actual, dibujar):
 	actual.crearCamino()
 	while actual in provieneDe:
 		actual = provieneDe[actual]
