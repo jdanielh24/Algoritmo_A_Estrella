@@ -10,6 +10,7 @@ class Menu:
 		self.ventanaMenu = pygame.display.set_mode((self.ancho, self.ancho))
 		self.fondo_menu = pygame.image.load("fondoMenu.jpg")
 		self.ventana = pygame.display.set_mode((self.ancho, self.ancho))
+		pygame.display.set_caption("Proyecto IA algoritmo estrella")
 
 	def get_font(self, size):  # Returns Press-Start-2P in the desired size
 		return pygame.font.Font("font.ttf", size)
@@ -39,7 +40,7 @@ class Menu:
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					if botonJugar.checkForInput(posicionMouse):
 						partida = Juego.Juego(self.ventana, self.ancho)
-						partida.iniciar()
+						partida.ejecutar()
 					if botonControles.checkForInput(posicionMouse):
 						self.controles()
 					if botonSalir.checkForInput(posicionMouse):

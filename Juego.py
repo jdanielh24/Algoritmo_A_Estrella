@@ -15,7 +15,7 @@ class Juego:
 		self.DIMENSIONES_POSIBLES = [4, 6, 8, 10, 16, 20, 25, 32, 40, 50]
 		self.indice_dim = 9
 
-	def iniciar(self):
+	def ejecutar(self):
 		indice_dim = 9
 		filas = self.DIMENSIONES_POSIBLES[indice_dim]
 		
@@ -31,6 +31,7 @@ class Juego:
 		messagebox.showinfo('¡Importante!', 'Asegurate de hacer click en la ventana del juego.\nPresiona la tecla [h] si deseas ver los controles.')
 
 		while run:
+			pygame.display.set_caption("Proyecto IA algoritmo estrella. Tablero de " + str(self.DIMENSIONES_POSIBLES[indice_dim]) + "x" + str(self.DIMENSIONES_POSIBLES[indice_dim]) + " casillas" )
 			Cuadricula.dibujar(self.ventana, cuadricula, filas, self.ancho)
 			for evento in pygame.event.get():
 				if evento.type == pygame.QUIT:

@@ -31,8 +31,6 @@ def dibujarCuadricula(ventana, filas, ancho):
 			pygame.draw.line(ventana, C.GRIS, (j * anchoCasilla, 0), (j * anchoCasilla, ancho))
 
 def dibujar(ventana, cuadricula, filas, ancho):
-	#ventana.fill(BLANCO)
-
 	for fila in cuadricula:
 		for nodo in fila:
 			nodo.dibujar(ventana)
