@@ -1,6 +1,6 @@
 import pygame
 import Colores as Color
-pygame.init()
+#pygame.init()
 
 FONT_12 = pygame.font.SysFont('chalkduster.ttf', 12)
 FONT_18 = pygame.font.SysFont('chalkduster.ttf', 18)

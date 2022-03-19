@@ -1,6 +1,6 @@
 import Nodo
 import pygame
-import Colores as C
+import Colores as Color
 
 def crearCuadricula(filas, ancho, mapa):
 	cuadricula = []
@@ -26,9 +26,9 @@ def crearCuadricula(filas, ancho, mapa):
 def dibujarCuadricula(ventana, filas, ancho):
 	anchoCasilla = ancho // filas
 	for i in range(filas):
-		pygame.draw.line(ventana, C.GRIS, (0, i * anchoCasilla), (ancho, i * anchoCasilla))
+		pygame.draw.line(ventana, Color.GRIS, (0, i * anchoCasilla), (ancho, i * anchoCasilla))
 		for j in range(filas):
-			pygame.draw.line(ventana, C.GRIS, (j * anchoCasilla, 0), (j * anchoCasilla, ancho))
+			pygame.draw.line(ventana, Color.GRIS, (j * anchoCasilla, 0), (j * anchoCasilla, ancho))
 
 def dibujar(ventana, cuadricula, filas, ancho):
 	for fila in cuadricula:
@@ -37,3 +37,10 @@ def dibujar(ventana, cuadricula, filas, ancho):
 
 	dibujarCuadricula(ventana, filas, ancho)
 	pygame.display.update()
+
+def reconstruirCamino(provieneDe, actual):
+	actual.crearCamino()
+	while actual in provieneDe:
+		actual = provieneDe[actual]
+		actual.crearCamino()
+		dibujar()

@@ -1,20 +1,14 @@
 import pygame
 from queue import PriorityQueue
+import Cuadricula
 
 def h(p1, p2):
 	x1, y1 = p1
-	x2, y2 = p2
+	x2, y2 = p
 	return abs(x1 - x2) + abs(y1 - y2)
 
-def reconstruirCamino(provieneDe, actual, dibujar):
-	actual.crearCamino()
-	while actual in provieneDe:
-		actual = provieneDe[actual]
-		actual.crearCamino()
-		dibujar()
 
 def algoritmo(dibujar, cuadricula, inicio, fin):
-
 	contador = 0
 	listaAbierta = PriorityQueue()
 	listaAbierta.put((0, contador, inicio))
@@ -35,7 +29,7 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 		listaAbiertaHash.remove(actual)
 
 		if actual == fin:
-			reconstruirCamino(provieneDe, fin, dibujar)
+			Cuadricula.reconstruirCamino(provieneDe, fin, dibujar)
 			fin.crearFinal()
 			return True
 
@@ -54,9 +48,7 @@ def algoritmo(dibujar, cuadricula, inicio, fin):
 					contador += 1
 					listaAbierta.put((f[vecino], contador, vecino))
 					listaAbiertaHash.add(vecino)
-					vecino.crearAbierto()
-					
-					
+					vecino.crearAbierto()	
 					
 		dibujar()
 
