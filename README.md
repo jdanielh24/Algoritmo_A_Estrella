@@ -5,7 +5,7 @@ Proyecto para la materia de Inteligencia Artificial, en donde se crea un mundo d
 Es necesario tener instalado el módulo pygame. Si no se tiene hay que utilizar el comando:
   `pip install pygame`
 
-Para correr la aplicación, ejecutamos el archivo main.py con el comando py:
+Para correr la aplicación, ejecutamos el archivo main.py con el comando:
   `python -u "ruta\donde\se\encuentra\main.py"`
 
 ## Integrantes:
