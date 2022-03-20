@@ -9,8 +9,8 @@ Para correr la aplicación, ejecutamos el archivo main.py con el comando py:
   `python -u "ruta\donde\se\encuentra\main.py"`
 
 ## Integrantes:
-Jesus Francisco Aguilera Guajardo 18131210
-Jose Luis Carreon Reyes 18131222
-Jesús Daniel López Hernández 18131252
-Jose Angel Rocha Garcia 18131273
-Ivan Romero Canaán 18131278
+- Jesus Francisco Aguilera Guajardo 18131210
+- Jose Luis Carreon Reyes 18131222
+- Jesús Daniel López Hernández 18131252
+- Jose Angel Rocha Garcia 18131273
+- Ivan Romero Canaán 18131278
