@@ -35,7 +35,7 @@ class Menu:
 
 	ANCHO = 800
 	ventanaMenu = pygame.display.set_mode((ANCHO, ANCHO))
-	fondoMenu = pygame.image.load("fondoMenu.jpg")
+	fondoMenu = pygame.image.load("res\\fondoMenu.jpg")
 	ventanaPartida = pygame.display.set_mode((ANCHO, ANCHO))
 
 
@@ -57,7 +57,7 @@ class Menu:
 				tamaño de la fuente.
 		"""
 		
-		return pygame.font.Font("font.ttf", size)
+		return pygame.font.Font("res\\font.ttf", size)
 
 
 	def iniciar(self):
@@ -74,11 +74,11 @@ class Menu:
 			contenedorTextoMenu = textoMenu.get_rect(center=(400, 200)) # center=(x,y) => centrar en dicha posicion.
 			
 			# crear los 3 botones siguientes:
-			botonJugar = Button(image=pygame.image.load("rectangulo.png"), pos=(400, 330),
+			botonJugar = Button(image=pygame.image.load("res\\rectangulo.png"), pos=(400, 330),
                         text_input="Jugar", font=self.get_font(30), base_color=color.BLANCO, hovering_color=color.VERDE)
-			botonControles = Button(image=pygame.image.load("rectangulo.png"), pos=(400, 480),
+			botonControles = Button(image=pygame.image.load("res\\rectangulo.png"), pos=(400, 480),
                             text_input="Controles", font=self.get_font(30), base_color=color.BLANCO, hovering_color=color.VERDE)
-			botonSalir = Button(image=pygame.image.load("rectangulo.png"), pos=(400, 630),
+			botonSalir = Button(image=pygame.image.load("res\\rectangulo.png"), pos=(400, 630),
                             text_input="Salir", font=self.get_font(30), base_color=color.BLANCO, hovering_color=color.VERDE)
 
 			self.ventanaMenu.blit(textoMenu, contenedorTextoMenu) # agregar título en VentanaMenu.
