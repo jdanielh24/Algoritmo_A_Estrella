@@ -1,3 +1,12 @@
+"""
+Archivo: colores.py
+    
+    Este archivo contiene un conjunto de constantes representando diferentes colores 
+    en formato RGB (Rojo, Verde, Azul). Cada color es almacenado como una tupla.
+    
+    Puede ser importado en cualquier otro archivo que necesite utilizar colores.
+"""
+
 ROJO = (255, 0, 0)
 VERDE = (0, 255, 0)
 AZUL = (0, 0, 255)
