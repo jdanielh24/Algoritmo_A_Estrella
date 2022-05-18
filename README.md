@@ -2,4 +2,5 @@
 
 ## Instalación
 Instalar pygame: 
+
 *pip install pygame*
