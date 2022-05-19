@@ -19,9 +19,9 @@ La función con la que se calcula el camino es la siguiente
 
 donde:
 
-g(n) es la distancia del camino desde el origen s al n.
+> g(n) es la distancia del camino desde el origen s al n.
 
-h(n) es la distancia estimada desde el nodo n hasta el nodo destino t.
+> h(n) es la distancia estimada desde el nodo n hasta el nodo destino t.
 
 Cada vez que el sistema inicia, se crea un mundo con una distribución aleatoria de los suelos. El mundo se conforma de una cuadrícula de NxN, donde cada casilla tiene un tipo de suelo.
 
