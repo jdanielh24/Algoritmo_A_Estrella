@@ -1,7 +1,9 @@
 # Algoritmo_A_Estrella
 
-## Instalación
-Instalar pygame: 
+## Requisitos:
+Python +3.0
+
+Instalar PyGame: 
 
 ```pip install pygame```
 
