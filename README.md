@@ -13,10 +13,10 @@ Acceder a la ruta donde se encuentra el proyecto y ejecutar el comando:
 ```python main.py```
 
 ## ¿Qué hace la aplicación?
-Calcula el camino más corto entre el punto A (origen) y el punto B (objetivo o destino). En la cuadrícula, se cuenta con diferentes terrenos, los cuales tienen un costo asignado y este representa qué tan difícil o qué tan fácil es cruzar por ellos. Además, se pueden colocar obstáculos por los cuales no es posible pasar, por lo cual se deberá buscar una ruta que evite estos puntos en la cuadrícula.
+Calcula el camino más corto entre el punto A (origen) y el punto B (objetivo o destino). En la cuadrícula, se cuenta con diferentes terrenos, los cuales tienen un costo asignado y este representa qué tan difícil o qué tan fácil es cruzar por ellos. Además, se pueden colocar obstáculos por los cuales no es posible pasar, por lo cual se deberá buscar una ruta que evite estos puntos.
 
 ## ¿Cómo funciona?
-El algoritmo de búsqueda A* puede calcular caminos mínimos en una red, en este caso en un tablero o cuadrícula, el algoritmo es heurístico por lo cual usa una evaluación heurística en la que mediante etiquetas (costos) de los nodos determina el camino óptimo.
+El algoritmo de búsqueda A* puede calcular caminos mínimos en una red, en este caso en un tablero o cuadrícula. El algoritmo es heurístico, por lo cual usa una evaluación heurística en la que mediante etiquetas (costos) de los nodos determina el camino óptimo.
 
 La función con la que se calcula el camino es la siguiente
 
