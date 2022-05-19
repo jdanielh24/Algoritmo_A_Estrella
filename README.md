@@ -33,3 +33,5 @@ Cada vez que el sistema inicia, se crea un mundo con una distribución aleatoria
 ### Otros elementos
 ![elementos](/img/2.png)
 
+Un ejemplo de cómo se ve un mundo recién creado es el siguiente:
+![ejemplo de mapa](/img/3.png)
