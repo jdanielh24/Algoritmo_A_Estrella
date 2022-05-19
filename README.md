@@ -54,7 +54,7 @@ donde:
 
 - ni = número de casillas del suelo Si. que forman parte del camino final.
 
-La primera prueba será una cuadrícula de 4x4, con el propósito de observar bien que los cálculos se realizan correctamente. Agregamos el inicio, el objetivo y los obstáculos.
+La primera prueba será una cuadrícula de 10x10, con el propósito de observar bien que los cálculos se realizan correctamente. Agregamos el inicio, el objetivo y los obstáculos.
 
 #### Prueba #1
 Tablero de 10x10 casillas:
