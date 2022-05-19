@@ -43,7 +43,7 @@ Al final de cada ejecución, el programa nos muestra un cuadro de texto indicand
 
 Podemos hacer la comprobación haciendo la suma de los costos, viendo qué casillas forman parte del camino amarillo. Para ello, empleamos la siguiente fórmula:
 
-![Fórmula/formula.png)
+![Fórmula]/formula.png)
 
 donde: 
 
