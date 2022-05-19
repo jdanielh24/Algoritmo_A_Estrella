@@ -40,8 +40,10 @@ Un ejemplo de cómo se ve un mundo recién creado es el siguiente:
 #### Prueba #1
 Tablero de 10x10 casillas:
 ![Prueba 1-1](/img/4.png)
+
 Resultado:
 ![Prueba 1-2](/img/5.png)
+
 Al hacer la la suma empleando la fórmula indicada anteriormente, obtenemos:
 
 - Pasto: 	S1 = 1, n1 = 5 : 	=>	1x5 = 5
