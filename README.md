@@ -43,7 +43,7 @@ Al final de cada ejecución, el programa nos muestra un cuadro de texto indicand
 
 Podemos hacer la comprobación haciendo la suma de los costos, viendo qué casillas forman parte del camino amarillo. Para ello, empleamos la siguiente fórmula:
 
-CT =i=1i=4 (Si*ni ) 
+![Fórmula/formula.png)
 
 donde: 
 
