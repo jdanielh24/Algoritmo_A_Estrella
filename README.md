@@ -37,11 +37,32 @@ Un ejemplo de cómo se ve un mundo recién creado es el siguiente:
 ![ejemplo de mapa](/img/3.png)
 
 ### Pruebas
+A continuación mostraremos una serie de pruebas que se realizaron con distintos mapas y cambiando la posición de los nodos de inicio, fin y objetivo.
+
+Al final de cada ejecución, el programa nos muestra un cuadro de texto indicando el costo total del camino. Dicho costo, también es mostrado en la casilla donde se encuentra el objetivo.
+
+Podemos hacer la comprobación haciendo la suma de los costos, viendo qué casillas forman parte del camino amarillo. Para ello, empleamos la siguiente fórmula:
+
+CT =i=1i=4 (Si*ni ) 
+
+donde: 
+
+- CT = Costo total del camino final
+
+- Si = Costo del suelo: S1 = 1 (Pasto), S2 = 5 (Bosque), S3 = 10 (Montaña), 
+ S4 = 20 (Agua)
+
+- ni = número de casillas del suelo Si. que forman parte del camino final.
+
+La primera prueba será una cuadrícula de 4x4, con el propósito de observar bien que los cálculos se realizan correctamente. Agregamos el inicio, el objetivo y los obstáculos.
+
 #### Prueba #1
 Tablero de 10x10 casillas:
+
 ![Prueba 1-1](/img/4.png)
 
 Resultado:
+
 ![Prueba 1-2](/img/5.png)
 
 Al hacer la la suma empleando la fórmula indicada anteriormente, obtenemos:
