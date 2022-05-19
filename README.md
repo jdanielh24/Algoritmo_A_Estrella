@@ -35,3 +35,24 @@ Cada vez que el sistema inicia, se crea un mundo con una distribución aleatoria
 
 Un ejemplo de cómo se ve un mundo recién creado es el siguiente:
 ![ejemplo de mapa](/img/3.png)
+
+### Pruebas
+#### Prueba #1
+Tablero de 10x10 casillas:
+![Prueba 1-1](/img/4.png)
+Resultado:
+![Prueba 1-2](/img/5.png)
+Al hacer la la suma empleando la fórmula indicada anteriormente, obtenemos:
+
+- Pasto: 	S1 = 1, n1 = 5 : 	=>	1x5 = 5
+
+- Bosque: 	S2 = 5, n2 = 4: 	=>	5x4 = 20
+
+- Montaña: 	S3 = 10, n3 = 1:	=>	10x1 = 10
+
+- Agua:	 	S4 = 20, n4 = 0: 	=>	20x0 = 0
+
+CT = 5 + 20 + 10 + 0 
+
+CT = 35
+
