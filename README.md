@@ -15,7 +15,7 @@ El algoritmo de búsqueda A* puede calcular caminos mínimos en una red, en este
 
 La función con la que se calcula el camino es la siguiente
 
-f(n) = g(n) + h(n)
+  f(n) = g(n) + h(n)
 
 donde:
 
