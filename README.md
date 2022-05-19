@@ -79,3 +79,26 @@ CT = 5 + 20 + 10 + 0
 
 CT = 35
 
+#### Prueba #2
+Tablero de 25x25 casillas:
+
+![Prueba 1-1](/img/6.png)
+
+Resultado:
+
+![Prueba 1-2](/img/7.png)
+
+Al hacer la la suma empleando la fórmula indicada anteriormente, obtenemos:
+
+- Pasto: 	S1 = 1, n1 = 47 : 	=>	1x47 = 47
+
+- Bosque: 	S2 = 5, n2 = 0: 	=>	5x0 = 0
+
+- Montaña: 	S3 = 10, n3 = 0:	=>	10x0 = 0
+
+- Agua:	 	S4 = 20, n4 = 1: 	=>	20x1 = 20
+
+CT = 47 + 0 + 0 + 20 
+
+CT = 67
+
