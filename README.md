@@ -27,4 +27,9 @@ donde:
 
 Cada vez que el sistema inicia, se crea un mundo con una distribución aleatoria de los suelos. El mundo se conforma de una cuadrícula de NxN, donde cada casilla tiene un tipo de suelo.
 
+### Tipos de suelo
+![tipos de suelo](/img/1.png)
+
+### Otros elementos
+![elementos](/img/2.png)
 
