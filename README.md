@@ -102,3 +102,25 @@ CT = 47 + 0 + 0 + 20
 
 CT = 67
 
+#### Prueba #3
+Tablero de 40x40 casillas:
+
+![Prueba 1-1](/img/8.png)
+
+Resultado:
+
+![Prueba 1-2](/img/9.png)
+
+Al hacer la la suma empleando la fórmula indicada anteriormente, obtenemos:
+
+- Pasto: 	S1 = 1, n1 = 26: 	=>	1x26 = 26
+
+- Bosque: 	S2 = 5, n2 = 4: 	=>	5x4 = 20
+
+- Montaña: 	S3 = 10, n3 = 1:	=>	10x1 = 10
+
+- Agua:	 	S4 = 20, n4 = 0 	=>	20x0 = 0
+
+CT = 26 + 20 + 10 + 0 
+
+CT = 56
